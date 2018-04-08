@@ -28,50 +28,103 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/dashboard/dashboard',
     name: 'Dashboard',
-    hidden: true,
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
-    }]
+    hidden: false
   },
-
   {
-    path: '/example',
+    path: '/dashboard',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
+    name: '首页',
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'dashboard',
+        name: '首页',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '首页', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/teacher',
+    component: Layout,
+    name: '教师管理',
+    meta: { title: '教师管理', icon: 'peoples' },
+    children: [
+      {
+        path: '/teacherList',
+        name: '教师列表',
+        meta: { title: '教师列表', icon: 'peoples' }
+      }
+    ]
+  },
+  {
+    path: '/teach',
+    name: '教学管理',
+    component: Layout,
+    hidden: false,
+    meta: { title: '教学管理', icon: 'example' },
+    children: [
+      {
+        path: '/search',
+        name: '教学查询',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '教学查询' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: '/task',
+        name: '教学任务',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '教学任务' }
+      },
+      {
+        path: '/result',
+        name: '教学成果',
+        meta: { title: '教学成果' }
       }
     ]
   },
-
   {
-    path: '/form',
+    path: '/research',
+    name: '科研管理',
+    meta: { title: '科研管理', icon: 'excel' },
     component: Layout,
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        path: 'resource',
+        name: '科研资讯',
+        component: () => import('@/views/research/resource'),
+        meta: { title: '科研资讯' }
+      },
+      {
+        path: 'result',
+        name: '科研成果',
+        meta: { title: '科研成果' }
+      },
+      {
+        path: 'keyword',
+        name: '科研关键字',
+        meta: { title: '科研关键字' },
+        component: () => import('@/views/research/keyword')
       }
     ]
   },
-
+  {
+    path: '/user',
+    name: '用户',
+    redirct: '/user/info',
+    component: Layout,
+    hidden: false,
+    meta: { title: '用户' },
+    children: [
+      {
+        path: 'info',
+        name: '个人信息',
+        component: () => import('@/views/user/info'),
+        meta: { title: '个人信息', icon: 'user' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
