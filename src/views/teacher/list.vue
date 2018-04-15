@@ -12,7 +12,7 @@
 
             <el-table-column align="center" label="教师姓名" width="95">
                 <template slot-scope="scope">
-                    {{scope.row.name}}
+                    <span class="link-type" @click="changePermis(scope.row)">{{scope.row.name}}</span>
                 </template>
             </el-table-column>
 
@@ -40,10 +40,19 @@
                 <template slot-scope="scope">
                     <!-- <el-button type="primary" size="mini">查看</el-button> -->
                     <!-- <el-button type="success" size="mini" >编辑</el-button> -->
-                    <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
+                    <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
                 </template>
             </el-table-column>
         </el-table>
+
+        <el-dialog :visible.sync="permisDialogVisable" title="配置权限">
+            <el-tree :data="permis" :props="{ label: 'name', children: 'children' }" show-checkbox>
+            </el-tree>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="permisDialogVisable = false">取 消</el-button>
+                <el-button type="primary" @click="permisDialogVisable = false">保 存</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script >
@@ -59,7 +68,7 @@ export default {
           sex: 1,
           age: 25,
           timestamp: "2018-04-01 15:34",
-          status: true
+          status: 0
         },
         {
           code: "2014081037",
@@ -67,7 +76,32 @@ export default {
           sex: 1,
           age: 32,
           timestamp: "2018-04-01 15:34",
-          status: false
+          status: 1
+        }
+      ],
+      permisDialogVisable: false,
+      permis: [
+        {
+          id: 1,
+          name: "教师列表"
+        },
+        {
+          id: 2,
+          name: "教学管理",
+          children: [
+            {
+              id: 3,
+              name: "教学查询"
+            },
+            {
+              id: 4,
+              name: "教学任务"
+            },
+            {
+              id: 5,
+              name: "教学成果"
+            }
+          ]
         }
       ]
     };
@@ -83,6 +117,9 @@ export default {
           return "女";
           break;
       }
+    },
+    changePermis(row) {
+        this.permisDialogVisable = true
     }
   }
 };
