@@ -56,26 +56,26 @@
     </div>
 </template>
 <script >
-import { parseTime } from "@/utils";
+
 export default {
-  name: "teacherList",
+  name: 'teacherList',
   data() {
     return {
       teacherList: [
         {
-          code: "2014081036",
-          name: "王小明",
+          code: '2014081036',
+          name: '王小明',
           sex: 1,
           age: 25,
-          timestamp: "2018-04-01 15:34",
+          timestamp: '2018-04-01 15:34',
           status: 0
         },
         {
-          code: "2014081037",
-          name: "王小明2",
+          code: '2014081037',
+          name: '王小明2',
           sex: 1,
           age: 32,
-          timestamp: "2018-04-01 15:34",
+          timestamp: '2018-04-01 15:34',
           status: 1
         }
       ],
@@ -83,46 +83,44 @@ export default {
       permis: [
         {
           id: 1,
-          name: "教师列表"
+          name: '教师列表'
         },
         {
           id: 2,
-          name: "教学管理",
+          name: '教学管理',
           children: [
             {
               id: 3,
-              name: "教学查询"
+              name: '教学查询'
             },
             {
               id: 4,
-              name: "教学任务"
+              name: '教学任务'
             },
             {
               id: 5,
-              name: "教学成果"
+              name: '教学成果'
             }
           ]
         }
       ]
-    };
+    }
   },
   methods: {
     sexFormatter(row) {
-      console.log(row);
+      console.log(row)
       switch (row.sex) {
         case 1:
-          return "男";
-          break;
+          return '男'
         case 2:
-          return "女";
-          break;
+          return '女'
       }
     },
     changePermis(row) {
-        this.permisDialogVisable = true
+      this.permisDialogVisable = true
     }
   }
-};
+}
 </script>
 
 

@@ -63,11 +63,10 @@ export const constantRouterMap = [
     path: '/teach',
     name: '教学管理',
     component: Layout,
-    hidden: false,
     meta: { title: '教学管理', icon: 'example' },
     children: [
       {
-        path: '/search',
+        path: 'search',
         name: '教学查询',
         component: () => import('@/views/dashboard/index'),
         meta: { title: '教学查询' }
@@ -75,8 +74,12 @@ export const constantRouterMap = [
       {
         path: '/task',
         name: '教学任务',
-        component: () => import('@/views/dashboard/index'),
-        meta: { title: '教学任务' }
+        meta: { title: '教学任务' },
+        component: () => import('@/views/teach/task/index'),
+        children: [
+          { path: 'create', component: () => import('@/views/teach/task/create'), name: 'taskCreate', meta: { title: '创建任务' }},
+          { path: 'list', component: () => import('@/views/teach/task/list'), name: 'taskList', meta: { title: '任务列表' }}
+        ]
       },
       {
         path: '/result',

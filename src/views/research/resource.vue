@@ -40,25 +40,25 @@
 </template>
 <script>
 export default {
-  name: "researchResource",
+  name: 'researchResource',
   data() {
     return {
       articleList: [
         {
-          title: "啊实打实的",
-          author: "asd",
+          title: '啊实打实的',
+          author: 'asd',
           pageviews: 100,
-          timestamp: "2018-4-01 15:34"
+          timestamp: '2018-4-01 15:34'
         },
         {
-          title: "啊实打实的",
-          author: "asd",
+          title: '啊实打实的',
+          author: 'asd',
           pageviews: 100,
-          timestamp: "2018-4-01 15:34"
+          timestamp: '2018-4-01 15:34'
         }
       ]
-    };
+    }
   }
-};
+}
 </script>
 
