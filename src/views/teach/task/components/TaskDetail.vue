@@ -1,41 +1,42 @@
 <template>
-    <div class="createPost-container">
-        <el-form class="form-containe" :model="postForm" ref="postForm">
-            <sticky :className="'sub-navbar subtitle'">
-                <template v-if="fetchSuccess">
-                    <el-button v-loading="loading" style="margin-left: 10px;" type="success">发布
-                    </el-button>
-                    <el-button v-loading="loading" type="warning">草稿</el-button>
-                    <el-button v-loading="loading" type="info">取消</el-button>
-                </template>
-            </sticky>
+  <div class="createPost-container">
+    <el-form class="form-containe" :model="postForm" ref="postForm">
+      <sticky :className="'sub-navbar subtitle'">
+        <template v-if="fetchSuccess">
+          <el-button v-loading="loading" style="margin-left: 10px;" type="success">发布
+          </el-button>
+          <el-button v-loading="loading" type="warning">草稿</el-button>
+          <el-button v-loading="loading" type="info">取消</el-button>
+        </template>
+      </sticky>
 
-            <div class="createPost-main-container">
+      <div class="createPost-main-container">
 
-                <div style="margin-bottom: 20px;">
-                    <Upload v-model="postForm.file_url"></Upload>
-                </div>
-            </div>
-        </el-form>
-    </div>
+        <div class="editor-container">
+          <tinymce :height=400 ref="editor" v-model="postForm.content"></tinymce>
+        </div>
+      </div>
+
+    </el-form>
+  </div>
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
-import Upload from '@/components/Upload/singleImage3'
-import MDinput from '@/components/MDinput'
-import Sticky from '@/components/Sticky' // 粘性header组件
+import Tinymce from "@/components/Tinymce";
+import Upload from "@/components/Upload/singleImage3";
+import MDinput from "@/components/MDinput";
+import Sticky from "@/components/Sticky"; // 粘性header组件
 
 const taskForm = {
-  title: '',
-  content: '',
-  task_short: '',
+  title: "",
+  content: "",
+  task_short: "",
   display_time: undefined,
-  file_url: ''
-}
+  file_url: ""
+};
 
 export default {
-  name: 'taskDetail',
+  name: "taskDetail",
   components: { Tinymce, MDinput, Upload, Sticky },
   props: {
     isEdit: {
@@ -48,9 +49,14 @@ export default {
       postForm: Object.assign({}, taskForm),
       fetchSuccess: true,
       loading: false
+    };
+  },
+  computed: {
+    contentShortLength() {
+      return this.postForm.task_short.length;
     }
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
