@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="taskList" border fit highlight-current-row style="width: 100%">
+    <el-table :data="taskList"  border fit highlight-current-row style="width: 100%" @row-click='handleClick'>
 
         <el-table-column align="center" label="序号" width="65" v-loading="loading" element-loading-text="正在加载">
             <template slot-scope="scope">
@@ -7,9 +7,9 @@
             </template>
         </el-table-column>
 
-        <el-table-column min-width="300px" align="center" label="标题">
+        <el-table-column min-width="300px" align="center" label="标题" >
             <template slot-scope="scope">
-                <span>{{scope.row.title}}</span>
+                <span >{{scope.row.title}}</span>
             </template>
         </el-table-column>
 
@@ -45,39 +45,46 @@ export default {
   name: "taskList",
   data() {
     return {
+      loading:false,
       taskList: [
           { id: 1,title: '一条新的任务',author:'主任',createdTime: '2018-04-18',status: '1'}
       ]
     };
   },
-  handleTaskTabEdit(targetName,action) {
-           if (action === 'add') {
-          let newTabName = ++this.tabIndex + '';
-          this.editableTabs.push({
-            title: 'New Tab',
-            name: newTabName,
-            content: 'New Tab content'
-          });
-          this.editableTabsValue = newTabName;
-        }
-        if (action === 'remove') {
-          let tabs = this.editableTabs;
-          let activeName = this.editableTabsValue;
-          if (activeName === targetName) {
-            tabs.forEach((tab, index) => {
-              if (tab.name === targetName) {
-                let nextTab = tabs[index + 1] || tabs[index - 1];
-                if (nextTab) {
-                  activeName = nextTab.name;
-                }
-              }
-            });
-          }
-          
-          this.editableTabsValue = activeName;
-          this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-        }
-      }
+  
+  methods:{
+  	handleClick(row){
+  		 this.$emit('ievent',row);
+  	}
+  }
+//handleTaskTabEdit(targetName,action) {
+//         if (action === 'add') {
+//        let newTabName = ++this.tabIndex + '';
+//        this.editableTabs.push({
+//          title: 'New Tab',
+//          name: newTabName,
+//          content: 'New Tab content'
+//        });
+//        this.editableTabsValue = newTabName;
+//      }
+//      if (action === 'remove') {
+//        let tabs = this.editableTabs;
+//        let activeName = this.editableTabsValue;
+//        if (activeName === targetName) {
+//          tabs.forEach((tab, index) => {
+//            if (tab.name === targetName) {
+//              let nextTab = tabs[index + 1] || tabs[index - 1];
+//              if (nextTab) {
+//                activeName = nextTab.name;
+//              }
+//            }
+//          });
+//        }
+//        
+//        this.editableTabsValue = activeName;
+//        this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+//      }
+//    }
 };
 </script>
 

@@ -1,13 +1,13 @@
 <template>
-  <task-detail></task-detail>
+  <task-edit></task-edit>
 </template>
 
 <script>
-import TaskDetail from './components/TaskDetail'
+import TaskEdit from './components/TaskEdit'
 
 export default {
   name: 'createTask',
-  components: { TaskDetail }
+  components: { TaskEdit }
 }
 </script>
 
