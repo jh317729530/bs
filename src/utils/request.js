@@ -1,66 +1,68 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import qs from 'qs'
 import store from '../store'
-import { getToken } from '@/utils/auth'
 
-// 创建axios实例
-const service = axios.create({
-  baseURL: process.env.BASE_API, // api的base_url
-  timeout: 15000 // 请求超时时间
-})
+// 全局默认配置
+// 设置post请求头
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
-// request拦截器
-service.interceptors.request.use(config => {
+// 设置 CORS 跨域
+axios.defaults.withCredentials = true
+axios.defaults.crossDomain = true
+
+axios.interceptors.request.use(config => {
+  // POST 请求参数处理成axios post 方法 所需的格式
+  if (config.method === 'post') {
+    config.data = qs.stringify(config.data)
+  }
+
   if (store.getters.token) {
-    config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    console.log(store.getters.token)
+    config['headers']['common']['token'] = store.getters.token
   }
+
   return config
-}, error => {
-  // Do something with request error
-  console.log(error) // for debug
-  Promise.reject(error)
+}, () => {
+  // 异常处理
 })
 
-// respone拦截器
-service.interceptors.response.use(
-  response => {
-  /**
-  * code为非20000是抛错 可结合自己业务进行修改
-  */
-    const res = response.data
-    if (res.code !== 20000) {
-      Message({
-        message: res.data,
-        type: 'error',
-        duration: 5 * 1000
-      })
-
-      // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('FedLogOut').then(() => {
-            location.reload()// 为了重新实例化vue-router对象 避免bug
-          })
-        })
-      }
-      return Promise.reject('error')
-    } else {
-      return response.data
-    }
-  },
-  error => {
-    console.log('err' + error)// for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
-    return Promise.reject(error)
+// 响应拦截
+axios.interceptors.response.use(response => {
+  const data = response.data
+  // 错误处理
+  if (data.code !== '200') {
+    const err = new Error(data.msg)
+    err.data = data
+    throw err
   }
-)
 
-export default service
+  // 根据不同的code做不同的处理
+  return response.data
+}, error => { // 返回状态码不为200时的错误处理
+  if (error) {
+    switch (error.data.code) {
+      case '400':
+        error.message = '请求错误'
+        break
+
+      case '500':
+        error.message = '系统内部错误'
+        break
+
+      case '4010':
+        error.message = 'token不能为空'
+        break
+
+      case '4011':
+        error.message = 'token不合法'
+        break
+
+      case '4012':
+        error.message = 'token已失效'
+        break
+    }
+  }
+  return Promise.reject(error)
+})
+
+export default axios

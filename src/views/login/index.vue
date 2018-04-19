@@ -28,6 +28,7 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
+import { Message } from 'element-ui'
 
 export default {
   name: 'login',
@@ -52,7 +53,7 @@ export default {
         password: 'admin'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        username: [{ required: true, trigger: 'blur'}],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
       loading: false,
@@ -75,6 +76,7 @@ export default {
             this.loading = false
             this.$router.push({ path: '/' })
           }).catch(() => {
+            Message.error('用户名或密码错误')
             this.loading = false
           })
         } else {

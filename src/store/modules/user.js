@@ -6,7 +6,7 @@ const user = {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    role: ''
   },
 
   mutations: {
@@ -19,8 +19,8 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
+    SET_ROLE: (state, role) => {
+      state.role = role
     }
   },
 
@@ -30,9 +30,9 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         login(username, userInfo.password).then(response => {
-          const data = response.data
-          setToken(data.token)
-          commit('SET_TOKEN', data.token)
+          const data = response
+          setToken(data.info)
+          commit('SET_TOKEN', data.info)
           resolve()
         }).catch(error => {
           reject(error)
@@ -44,8 +44,9 @@ const user = {
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
-          const data = response.data
-          commit('SET_ROLES', data.roles)
+          const data = response.info
+          console.log(response)
+          commit('SET_ROLE', data.role)
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
           resolve(response)

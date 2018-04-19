@@ -1,8 +1,10 @@
 import request from '@/utils/request'
 
+const baseURL = '/api'
+
 export function login(username, password) {
   return request({
-    url: '/user/login',
+    url: baseURL + '/user/login',
     method: 'post',
     data: {
       username,
@@ -11,11 +13,10 @@ export function login(username, password) {
   })
 }
 
-export function getInfo(token) {
+export function getInfo() {
   return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
+    url: baseURL + '/user/baseInfo',
+    method: 'get'
   })
 }
 
