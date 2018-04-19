@@ -90,16 +90,30 @@ export default {
           name: '教学管理',
           children: [
             {
-              id: 3,
-              name: '教学查询'
-            },
-            {
               id: 4,
               name: '教学任务'
             },
             {
               id: 5,
               name: '教学成果'
+            }
+          ]
+        },
+        {
+          id: 6,
+          name: '科研管理',
+          children: [
+            {
+              id: 7,
+              name: '科研资讯'
+            },
+            {
+              id: 8,
+              name: '科研成果'
+            },
+            {
+              id: 9,
+              name: '科研关键字'
             }
           ]
         }
