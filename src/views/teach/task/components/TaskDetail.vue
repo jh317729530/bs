@@ -1,12 +1,16 @@
 <template>
     <div>
         <div v-html="content"></div>
-        <sticky :className="'sub-navbar subtitle'">
-            <el-button v-loading="loading" style="margin-left: 10px;" type="success">发布
-            </el-button>
-            <el-button v-loading="loading" type="warning">草稿</el-button>
-            <el-button v-loading="loading" type="info">取消</el-button>
-        </sticky>
+        <div class="sub-navbar subtitle">
+            <sticky>
+                <template v-if="fetchSuccess">
+                    <el-button v-loading="loading" style="margin-left: 10px;" type="success">发布
+                    </el-button>
+                    <el-button v-loading="loading" type="warning">草稿</el-button>
+                    <el-button v-loading="loading" type="info">取消</el-button>
+                </template>
+            </sticky>
+        </div>
     </div>
 </template>
 
@@ -14,19 +18,20 @@
 import Sticky from "@/components/Sticky"; // 粘性header组件
 
 export default {
-  name: 'taskDetail',
+  name: "taskDetail",
   props: {
     content: {
       type: String,
-      default: ''
+      default: ""
     }
   },
   components: {
-      Sticky
+    Sticky
   },
   data() {
     return {
-      loading: false
+      loading: false,
+      fetchSuccess: true
     };
   }
 };
