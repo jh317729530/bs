@@ -89,7 +89,7 @@ export const asyncRouterMap = [
     path: '/teach',
     name: '教学管理',
     component: Layout,
-    meta: { title: '教学管理', icon: 'example' },
+    meta: { title: '教学管理', icon: 'example', needPermis: ['/teach'] },
     children: [
       // {
       //   path: 'search',
@@ -100,17 +100,17 @@ export const asyncRouterMap = [
       {
         path: '/task',
         name: '教学任务',
-        meta: { title: '教学任务' },
+        meta: { title: '教学任务', needPermis: ['/teach/task'] },
         component: () => import('@/views/teach/task/index'),
         children: [
-          { path: 'create', component: () => import('@/views/teach/task/create'), name: 'taskCreate', meta: { title: '创建任务' }},
-          { path: 'list', component: () => import('@/views/teach/task/list'), name: 'taskList', meta: { title: '任务列表' }}
+          { path: 'create', component: () => import('@/views/teach/task/create'), name: 'taskCreate', meta: { title: '创建任务', needPermis: ['/teach/task/create'] }},
+          { path: 'list', component: () => import('@/views/teach/task/list'), name: 'taskList', meta: { title: '任务列表', needPermis: ['/teach/task/list'] }}
         ]
       },
       {
         path: 'result',
         name: '教学成果',
-        meta: { title: '教学成果' },
+        meta: { title: '教学成果', needPermis: ['/teach/result'] },
         component: () => import('@/views/teach/result/list')
       }
     ]
@@ -118,24 +118,24 @@ export const asyncRouterMap = [
   {
     path: '/research',
     name: '科研管理',
-    meta: { title: '科研管理', icon: 'excel' },
+    meta: { title: '科研管理', icon: 'excel', needPermis: ['/research'] },
     component: Layout,
     children: [
       {
         path: 'resource',
         name: '科研资讯',
         component: () => import('@/views/research/resource'),
-        meta: { title: '科研资讯' }
+        meta: { title: '科研资讯', needPermis: ['/research/resource'] }
       },
       {
         path: 'result',
         name: '科研成果',
-        meta: { title: '科研成果' }
+        meta: { title: '科研成果', needPermis: ['/research/result'] }
       },
       {
         path: 'keyword',
         name: '科研关键字',
-        meta: { title: '科研关键字' },
+        meta: { title: '科研关键字', needPermis: ['/research/keyword'] },
         component: () => import('@/views/research/keyword')
       }
     ]
