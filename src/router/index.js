@@ -46,16 +46,42 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/user',
+    name: '用户',
+    redirct: '/user/info',
+    component: Layout,
+    hidden: false,
+    meta: { title: '用户' },
+    children: [
+      {
+        path: 'info',
+        name: '个人信息',
+        component: () => import('@/views/user/info'),
+        meta: { title: '个人信息', icon: 'user' }
+      }
+    ]
+  },
+  { path: '*', redirect: '/404', hidden: true }
+]
+
+export default new Router({
+  // mode: 'history', //后端支持可开
+  scrollBehavior: () => ({ y: 0 }),
+  routes: constantRouterMap
+})
+
+export const asyncRouterMap = [
+  {
     path: '/teacher',
     component: Layout,
     name: '教师管理',
-    meta: { title: '教师管理', icon: 'peoples' },
+    meta: { title: '教师管理', icon: 'peoples', needPermis: ['/teacher/list'] },
     children: [
       {
         path: 'list',
         name: '教师列表',
         component: () => import('@/views/teacher/list'),
-        meta: { title: '教师列表', icon: 'peoples' }
+        meta: { title: '教师列表', icon: 'peoples', needPermis: ['/teacher/list'] }
       }
     ]
   },
@@ -113,29 +139,6 @@ export const constantRouterMap = [
         component: () => import('@/views/research/keyword')
       }
     ]
-  },
-  {
-    path: '/user',
-    name: '用户',
-    redirct: '/user/info',
-    component: Layout,
-    hidden: false,
-    meta: { title: '用户' },
-    children: [
-      {
-        path: 'info',
-        name: '个人信息',
-        component: () => import('@/views/user/info'),
-        meta: { title: '个人信息', icon: 'user' }
-      }
-    ]
-  },
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
-
-export default new Router({
-  // mode: 'history', //后端支持可开
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRouterMap
-})
 

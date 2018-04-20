@@ -10,3 +10,10 @@ export function savePermis(userId, permisIds) {
     data
   })
 }
+
+export function getPermis() {
+  return request({
+    url: baseURL + '/permis/getPermis',
+    method: 'get'
+  })
+}

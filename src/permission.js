@@ -12,7 +12,7 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login') {
       next({ path: '/' })
     } else {
-      if (!store.getters.role) {
+      if (store.getters.permisUrl.length === 0) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
           next()
         }).catch(() => {
@@ -20,6 +20,15 @@ router.beforeEach((to, from, next) => {
             Message.error('验证失败,请重新登录')
             next({ path: '/login' })
           })
+        })
+
+        // 拉取权限
+        store.dispatch('getPermissions').then(res => {
+          store.dispatch('GenerateRoutes', store.getters.permisUrl).then(() => {
+            router.addRoutes(store.getters.addRouters)
+            next({ ...to, replace: true })
+          })
+          next()
         })
       } else {
         next()
