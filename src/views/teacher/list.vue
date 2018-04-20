@@ -1,140 +1,136 @@
 <template>
-    <div class="app-container">
-        <el-input style='width:180px;' placeholder="输入教师姓名搜索" prefix-icon="el-icon-document"></el-input>
-        <el-button style='margin-bottom:20px;' type="primary" icon="document">查询</el-button>
+  <div class="app-container">
+    <el-input style='width:180px;' placeholder="输入教师姓名搜索" prefix-icon="el-icon-document" v-model="listQuery.name"></el-input>
+    <el-button style='margin-bottom:20px;' type="primary" icon="document" @click="handleFilter">查询</el-button>
 
-        <el-table :data="teacherList" element-loading-text="拼命加载中" style="width: 691px" border fit highlight-current-row>
-            <el-table-column align="center" label='工号' width="100">
-                <template slot-scope="scope">
-                    {{scope.row.code}}
-                </template>
-            </el-table-column>
+    <el-table :data="teacherList" element-loading-text="拼命加载中" style="width: 691px" border fit highlight-current-row>
+      <el-table-column align="center" label='工号' width="100">
+        <template slot-scope="scope">
+          {{scope.row.workNumber}}
+        </template>
+      </el-table-column>
 
-            <el-table-column align="center" label="教师姓名" width="95">
-                <template slot-scope="scope">
-                    <span class="link-type" @click="changePermis(scope.row)">{{scope.row.name}}</span>
-                </template>
-            </el-table-column>
+      <el-table-column align="center" label="教师姓名" width="95">
+        <template slot-scope="scope">
+          <span class="link-type" @click="changePermis(scope.row)">{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
 
-            <el-table-column label="性别" width="110" align="center">
-                <template slot-scope="scope">
-                    <span v-if="scope.row.sex === 1">男</span>
-                    <span v-else>女</span>
-                </template>
-            </el-table-column>
+      <el-table-column label="性别" width="110" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.sex === 1">男</span>
+          <span v-else>女</span>
+        </template>
+      </el-table-column>
 
-            <el-table-column label="年龄" width="115" align="center">
-                <template slot-scope="scope">
-                    {{scope.row.age}}
-                </template>
-            </el-table-column>
+      <el-table-column label="年龄" width="115" align="center">
+        <template slot-scope="scope">
+          {{scope.row.age}}
+        </template>
+      </el-table-column>
 
-            <el-table-column align="center" label="创建日期" width="200">
-                <template slot-scope="scope">
-                    <i class="el-icon-time"></i>
-                    <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
-                </template>
-            </el-table-column>
+      <el-table-column align="center" label="创建日期" width="200">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span>{{scope.row.created}}</span>
+        </template>
+      </el-table-column>
 
-            <el-table-column label="操作" width="70" align="center">
-                <template slot-scope="scope">
-                    <!-- <el-button type="primary" size="mini">查看</el-button> -->
-                    <!-- <el-button type="success" size="mini" >编辑</el-button> -->
-                    <el-switch v-model="scope.row.status" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949"></el-switch>
-                </template>
-            </el-table-column>
-        </el-table>
+      <el-table-column label="操作" width="70" align="center">
+        <template slot-scope="scope">
+          <!-- <el-button type="primary" size="mini">查看</el-button> -->
+          <!-- <el-button type="success" size="mini" >编辑</el-button> -->
+          <el-switch v-model="scope.row.userStatus" :active-value="1" :inactive-value="0" active-color="#13ce66" inactive-color="#ff4949" @change="changeStatus(scope.row)"></el-switch>
+        </template>
+      </el-table-column>
+    </el-table>
 
-        <el-dialog :visible.sync="permisDialogVisable" title="配置权限">
-            <el-tree :data="permis" :props="{ label: 'name', children: 'children' }" show-checkbox>
-            </el-tree>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="permisDialogVisable = false">取 消</el-button>
-                <el-button type="primary" @click="permisDialogVisable = false">保 存</el-button>
-            </span>
-        </el-dialog>
-    </div>
+    <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" @current-change="handleCurrentChange" :current-page="currentPage">
+    </el-pagination>
+
+    <el-dialog :visible.sync="permisDialogVisable" title="配置权限">
+      <el-tree :data="permis" :props="{ label: 'name', children: 'children' }" node-key="permisId" :default-checked-keys="hasPermisIds"  show-checkbox>
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="permisDialogVisable = false">取 消</el-button>
+        <el-button type="primary" @click="permisDialogVisable = false">保 存</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 <script >
+import { getTeacherList, changeUserStatus, getTeacherPermis } from "@/api/teacher";
 
 export default {
-  name: 'teacherList',
+  name: "teacherList",
   data() {
     return {
-      teacherList: [
-        {
-          code: '2014081036',
-          name: '王小明',
-          sex: 1,
-          age: 25,
-          timestamp: '2018-04-01 15:34',
-          status: 0
-        },
-        {
-          code: '2014081037',
-          name: '王小明2',
-          sex: 1,
-          age: 32,
-          timestamp: '2018-04-01 15:34',
-          status: 1
-        }
-      ],
+      listQuery: {
+        name: ''
+      },
+      currentPage: 1,
+      pageSize: 10,
+      total: 0,
+      teacherList: [],
       permisDialogVisable: false,
-      permis: [
-        {
-          id: 1,
-          name: '教师列表'
-        },
-        {
-          id: 2,
-          name: '教学管理',
-          children: [
-            {
-              id: 4,
-              name: '教学任务'
-            },
-            {
-              id: 5,
-              name: '教学成果'
-            }
-          ]
-        },
-        {
-          id: 6,
-          name: '科研管理',
-          children: [
-            {
-              id: 7,
-              name: '科研资讯'
-            },
-            {
-              id: 8,
-              name: '科研成果'
-            },
-            {
-              id: 9,
-              name: '科研关键字'
-            }
-          ]
-        }
-      ]
-    }
+      permis: [],
+      hasPermisIds: [] 
+    };
   },
   methods: {
     sexFormatter(row) {
-      console.log(row)
+      console.log(row);
       switch (row.sex) {
         case 1:
-          return '男'
+          return "男";
         case 2:
-          return '女'
+          return "女";
       }
     },
     changePermis(row) {
-      this.permisDialogVisable = true
+      this.permisDialogVisable = true;
+      this.fetchPermis(row.userId)
+
+    },
+    fetchData(name,pageNum,pageSize) {
+      getTeacherList(name,pageNum,pageSize)
+        .then(response => {
+          let data = response.info
+          this.teacherList = data.result
+          this.currentPage = data.pageNum
+          this.total = data.total
+
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    handleFilter(name,pageNum) {
+      this.fetchData(this.listQuery.name,pageNum)
+    },
+    handleCurrentChange(pageNum) {
+      this.fetchData(this.listQuery.name,pageNum)
+    },
+    changeStatus(row) {
+      let userId = row.userId
+      let userStatus = row.userStatus
+      changeUserStatus(userId,userStatus)
+    },
+    fetchPermis(id) {
+      getTeacherPermis(id).then(response => {
+        this.permis = []
+        this.permis.push(response.info.root)
+        console.log(this.permis)
+        this.hasPermisIds = response.info.checkPermisIds
+        console.log(this.hasPermisIds)
+      })
     }
-  }
-}
+  },
+  created() {
+    this.fetchData();
+  },
+  computed: {}
+};
 </script>
 
 
