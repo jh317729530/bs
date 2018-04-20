@@ -49,17 +49,18 @@
     </el-pagination>
 
     <el-dialog :visible.sync="permisDialogVisable" title="配置权限">
-      <el-tree :data="permis" :props="{ label: 'name', children: 'children' }" node-key="permisId" :default-checked-keys="hasPermisIds"  show-checkbox>
+      <el-tree :data="permis" :props="{ label: 'name', children: 'children' }" node-key="permisId" :default-checked-keys="hasPermisIds" ref="permisTree"  show-checkbox>
       </el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="permisDialogVisable = false">取 消</el-button>
-        <el-button type="primary" @click="permisDialogVisable = false">保 存</el-button>
+        <el-button type="primary" @click="savePermis">保 存</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script >
 import { getTeacherList, changeUserStatus, getTeacherPermis } from "@/api/teacher";
+import { savePermis } from '@/api/permis'
 
 export default {
   name: "teacherList",
@@ -74,7 +75,8 @@ export default {
       teacherList: [],
       permisDialogVisable: false,
       permis: [],
-      hasPermisIds: [] 
+      hasPermisIds: [],
+      currentUserId: undefined
     };
   },
   methods: {
@@ -120,10 +122,15 @@ export default {
       getTeacherPermis(id).then(response => {
         this.permis = []
         this.permis.push(response.info.root)
-        console.log(this.permis)
         this.hasPermisIds = response.info.checkPermisIds
-        console.log(this.hasPermisIds)
+        this.currentUserId = id
       })
+    },
+    savePermis(){
+       let permis = this.$refs.permisTree.getCheckedKeys();
+       savePermis(this.currentUserId,permis).then(() => {
+         this.permisDialogVisable = false
+       })
     }
   },
   created() {
