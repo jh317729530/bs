@@ -80,51 +80,51 @@
 
 <script>
 export default {
-  name: "resultList",
+  name: 'resultList',
   data() {
     return {
       workList: [
         {
           id: 1,
-          uploadTime: "2018-04-19",
-          title: "Java面向对象编程",
-          author: "王小明2",
+          uploadTime: '2018-04-19',
+          title: 'Java面向对象编程',
+          author: '王小明2',
           score: 3,
           downloadCount: 50
         },
         {
           id: 2,
-          uploadTime: "2018-04-19",
-          title: "数据结构与算法",
-          author: "王小明2",
+          uploadTime: '2018-04-19',
+          title: '数据结构与算法',
+          author: '王小明2',
           score: 2,
           downloadCount: 3
         },
         {
           id: 3,
-          uploadTime: "2018-04-19",
-          title: "C语言程序设计",
-          author: "王小明",
+          uploadTime: '2018-04-19',
+          title: 'C语言程序设计',
+          author: '王小明',
           score: 1,
           downloadCount: 26
         },
         {
           id: 4,
-          uploadTime: "2018-04-19",
-          title: "编译原理",
-          author: "王小明",
+          uploadTime: '2018-04-19',
+          title: '编译原理',
+          author: '王小明',
           score: 1,
           downloadCount: 11
         }
       ],
       scoreOptions: [1, 2, 3],
       listQuery: {
-        title: "",
+        title: '',
         score: undefined
       },
       isUploadVisable: false,
-      uploadTitle: ""
-    };
+      uploadTitle: ''
+    }
   }
-};
+}
 </script>

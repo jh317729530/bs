@@ -37,54 +37,25 @@
 <script>
 export default {
   props: {
-      type: {
-          type: String,
-          default: "list"
-      }
+    type: {
+      type: String,
+      default: 'list'
+    }
   },
-  name: "taskList",
+  name: 'taskList',
   data() {
     return {
-      loading:false,
+      loading: false,
       taskList: [
-          { id: 1,title: '一条新的任务',author:'主任',createdTime: '2018-04-18',status: '1'}
+        { id: 1, title: '一条新的任务', author: '主任', createdTime: '2018-04-18', status: '1' }
       ]
-    };
+    }
   },
-  
-  methods:{
-  	handleClick(row){
-  		 this.$emit('ievent',row);
-  	}
+  methods: {
+    handleClick(row) {
+      this.$emit('ievent', row)
+    }
   }
-//handleTaskTabEdit(targetName,action) {
-//         if (action === 'add') {
-//        let newTabName = ++this.tabIndex + '';
-//        this.editableTabs.push({
-//          title: 'New Tab',
-//          name: newTabName,
-//          content: 'New Tab content'
-//        });
-//        this.editableTabsValue = newTabName;
-//      }
-//      if (action === 'remove') {
-//        let tabs = this.editableTabs;
-//        let activeName = this.editableTabsValue;
-//        if (activeName === targetName) {
-//          tabs.forEach((tab, index) => {
-//            if (tab.name === targetName) {
-//              let nextTab = tabs[index + 1] || tabs[index - 1];
-//              if (nextTab) {
-//                activeName = nextTab.name;
-//              }
-//            }
-//          });
-//        }
-//        
-//        this.editableTabsValue = activeName;
-//        this.editableTabs = tabs.filter(tab => tab.name !== targetName);
-//      }
-//    }
-};
+}
 </script>
 

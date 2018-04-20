@@ -59,11 +59,11 @@
   </div>
 </template>
 <script >
-import { getTeacherList, changeUserStatus, getTeacherPermis } from "@/api/teacher";
+import { getTeacherList, changeUserStatus, getTeacherPermis } from '@/api/teacher'
 import { savePermis } from '@/api/permis'
 
 export default {
-  name: "teacherList",
+  name: 'teacherList',
   data() {
     return {
       listQuery: {
@@ -77,46 +77,44 @@ export default {
       permis: [],
       hasPermisIds: [],
       currentUserId: undefined
-    };
+    }
   },
   methods: {
     sexFormatter(row) {
-      console.log(row);
+      console.log(row)
       switch (row.sex) {
         case 1:
-          return "男";
+          return '男'
         case 2:
-          return "女";
+          return '女'
       }
     },
     changePermis(row) {
-      this.permisDialogVisable = true;
+      this.permisDialogVisable = true
       this.fetchPermis(row.userId)
-
     },
-    fetchData(name,pageNum,pageSize) {
-      getTeacherList(name,pageNum,pageSize)
+    fetchData(name, pageNum, pageSize) {
+      getTeacherList(name, pageNum, pageSize)
         .then(response => {
-          let data = response.info
+          const data = response.info
           this.teacherList = data.result
           this.currentPage = data.pageNum
           this.total = data.total
-
         })
         .catch(err => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     },
-    handleFilter(name,pageNum) {
-      this.fetchData(this.listQuery.name,pageNum)
+    handleFilter(name, pageNum) {
+      this.fetchData(this.listQuery.name, pageNum)
     },
     handleCurrentChange(pageNum) {
-      this.fetchData(this.listQuery.name,pageNum)
+      this.fetchData(this.listQuery.name, pageNum)
     },
     changeStatus(row) {
-      let userId = row.userId
-      let userStatus = row.userStatus
-      changeUserStatus(userId,userStatus)
+      const userId = row.userId
+      const userStatus = row.userStatus
+      changeUserStatus(userId, userStatus)
     },
     fetchPermis(id) {
       getTeacherPermis(id).then(response => {
@@ -126,18 +124,18 @@ export default {
         this.currentUserId = id
       })
     },
-    savePermis(){
-       let permis = this.$refs.permisTree.getCheckedKeys();
-       savePermis(this.currentUserId,permis).then(() => {
-         this.permisDialogVisable = false
-       })
+    savePermis() {
+      const permis = this.$refs.permisTree.getCheckedKeys()
+      savePermis(this.currentUserId, permis).then(() => {
+        this.permisDialogVisable = false
+      })
     }
   },
   created() {
-    this.fetchData();
+    this.fetchData()
   },
   computed: {}
-};
+}
 </script>
 
 
