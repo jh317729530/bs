@@ -59,7 +59,7 @@
   </div>
 </template>
 <script >
-import { getTeacherList, changeUserStatus, getTeacherPermis } from '@/api/teacher'
+import { getTeacherPage, changeUserStatus, getTeacherPermis } from '@/api/teacher'
 import { savePermis } from '@/api/permis'
 
 export default {
@@ -94,7 +94,7 @@ export default {
       this.fetchPermis(row.userId)
     },
     fetchData(name, pageNum, pageSize) {
-      getTeacherList(name, pageNum, pageSize)
+      getTeacherPage(name, pageNum, pageSize)
         .then(response => {
           const data = response.info
           this.teacherList = data.result

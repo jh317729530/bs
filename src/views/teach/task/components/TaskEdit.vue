@@ -3,7 +3,7 @@
     <el-form class="form-containe" :model="postForm" ref="postForm">
       <sticky :className="'sub-navbar subtitle'">
         <template v-if="fetchSuccess">
-          <el-button v-loading="loading" style="margin-left: 10px;" type="success">发布
+          <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitTask">发布
           </el-button>
           <el-button v-loading="loading" type="warning">草稿</el-button>
           <el-button v-loading="loading" type="info">取消</el-button>
@@ -24,12 +24,12 @@
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
-                  <el-button type="primary" @click="notice = true">选择通知教师</el-button>
+                  <el-button type="primary" @click="getAndSelectTeacher">选择通知教师</el-button>
                 </el-col>
 
                 <el-col :span="8">
                   <el-form-item label-width="80px" label="发布时间:" class="postInfo-container-item">
-                    <el-date-picker v-model="postForm.display_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间">
+                    <el-date-picker v-model="postForm.release_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间">
                     </el-date-picker>
                   </el-form-item>
                 </el-col>
@@ -39,7 +39,7 @@
         </el-row>
 
         <el-form-item style="margin-bottom: 40px;" label-width="45px" label="摘要:">
-          <el-input type="textarea" class="article-textarea" :rows="1" autosize placeholder="请输入内容" v-model="postForm.task_short">
+          <el-input type="textarea" class="article-textarea" :rows="1" autosize placeholder="请输入内容" v-model="postForm.content_short">
           </el-input>
           <span class="word-counter" v-show="contentShortLength">{{contentShortLength}}字</span>
         </el-form-item>
@@ -56,10 +56,10 @@
     </el-form>
 
     <el-dialog :visible.sync="notice" title="选择通知的用户">
-      <el-transfer filterable :filter-method="filterMethod" :titles="['选择教师','通知列表']" filter-placeholder="请输入教师姓名" v-model="selectedTeacher" :data="teacher">
+      <el-transfer filterable :filter-method="filterMethod" :titles="['选择教师','通知列表']" v-model="selectedTeacherIds" :right-default-checked="selectedTeacherIds" filter-placeholder="请输入教师姓名" :data="teacher">
       </el-transfer>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="notice = false">取 消</el-button>
+        <el-button @click="cancelSelected">取 消</el-button>
         <el-button type="primary" @click="notice = false">确 定</el-button>
       </span>
     </el-dialog>
@@ -71,13 +71,16 @@ import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/singleImage3'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
+import { getTeacherList } from '@/api/teacher'
+import { addTask } from '@/api/task'
+import { Message } from 'element-ui'
 
 const taskForm = {
   title: '',
   content: '',
-  task_short: '',
-  display_time: undefined,
-  file_url: ''
+  content_short: '',
+  release_time: undefined,
+  file_url: []
 }
 
 export default {
@@ -94,22 +97,50 @@ export default {
       postForm: Object.assign({}, taskForm),
       fetchSuccess: true,
       loading: false,
-      notice: true,
+      notice: false,
       teacher: [
         { key: 1, label: '王小明', disabled: false },
         { key: 2, label: '王小明2', disabled: false }
       ],
-      selectedTeacher: []
+      selectedTeacherIds: []
     }
   },
   computed: {
     contentShortLength() {
-      return this.postForm.task_short.length
+      return this.postForm.content_short.length
     }
   },
   methods: {
     filterMethod(query, item) {
       return item.label.search(query) > -1
+    },
+    getAndSelectTeacher() {
+      this.teacher = []
+      getTeacherList(1).then(res => {
+        const data = res.info
+        data.forEach(elTeacher => {
+          const teacher = {}
+          teacher.key = elTeacher.id
+          teacher.label = elTeacher.name
+          teacher.disabled = false
+          this.teacher.push(teacher)
+        })
+      })
+      this.notice = true
+    },
+    cancelSelected() {
+      this.selectedTeacherIds = []
+      this.notice = false
+    },
+    submitTask() {
+      addTask(this.postForm, this.selectedTeacherIds).then(res => {
+        if (res.status === 'true') {
+          Message.success('发布成功')
+          this.$router.push({ path: '/task/list' })
+        } else {
+          Message.error('发布失败')
+        }
+      })
     }
   }
 }
