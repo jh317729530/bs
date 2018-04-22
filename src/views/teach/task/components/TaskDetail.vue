@@ -4,11 +4,11 @@
     <div class='sub-navbar subtitle'>
       <sticky>
         <template v-if='fetchSuccess'>
-          <el-button style='margin-left: 10px;' @click='fetchStatistics'>查看任务完成情况</el-button>
+          <el-button style='margin-left: 10px;' @click='fetchStatistics' v-if="this.roleId === 2">查看任务完成情况</el-button>
           <el-button v-loading='loading' style='margin-left: 10px;' type='warning'>下载附件
           </el-button>
-          <el-button v-loading='loading' type='success'>完成</el-button>
-          <el-button v-loading='loading' type='danger'>结束任务</el-button>
+          <el-button v-loading='loading' type='success' v-if="this.roleId ===3">完成</el-button>
+          <el-button v-loading='loading' type='danger' v-if="this.roleId === 2">结束任务</el-button>
         </template>
       </sticky>
     </div>
@@ -61,6 +61,7 @@
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { getStatistics } from '@/api/task'
+import store from '../../../../store'
 
 export default {
   name: 'taskDetail',
@@ -82,7 +83,8 @@ export default {
       fetchSuccess: true,
       submitVisible: false,
       taskStatisticsVisible: false,
-      taskStatisticsList: []
+      taskStatisticsList: [],
+      roleId: undefined
     }
   },
   methods: {
@@ -93,6 +95,9 @@ export default {
       })
       this.taskStatisticsVisible = true
     }
+  },
+  created () {
+    this.roleId = store.getters.role
   }
 }
 </script>
