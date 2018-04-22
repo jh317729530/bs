@@ -15,19 +15,19 @@
 
         <el-table-column min-width="150px" align="center" label="发布人">
             <template slot-scope="scope">
-                <span>{{scope.row.author}}</span>
+                <span>{{scope.row.name}}</span>
             </template>
         </el-table-column>
 
         <el-table-column width="180px" align="center" label="发布时间">
             <template slot-scope="scope">
-                <span>{{scope.row.createdTime}}</span>
+                <span>{{scope.row.releaseTime}}</span>
             </template>
         </el-table-column>
 
         <el-table-column width="180px" align="center" label="任务状态">
             <template slot-scope="scope">
-                <span>{{scope.row.status}}</span>
+             <el-tag :type="scope.row.status | statusFilter">{{scope.row.status | statusStringFilter}}</el-tag>
             </template>
         </el-table-column>
 
@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import { getList, getDetail } from '@/api/task'
 export default {
   props: {
     type: {
@@ -46,14 +47,34 @@ export default {
   data() {
     return {
       loading: false,
-      taskList: [
-        { id: 1, title: '一条新的任务', author: '主任', createdTime: '2018-04-18', status: '1' }
-      ]
+      taskList: []
     }
   },
   methods: {
     handleClick(row) {
-      this.$emit('ievent', row)
+      // 获取任务详情
+      let pushData = {}
+      getDetail(row.id).then(res => {
+        pushData = res.info
+        this.$emit('ievent', pushData)
+      })
+    }
+  },
+  created () {
+    this.taskList = []
+    getList().then(res => {
+      const data = res.info
+      this.taskList = data
+    })
+  },
+  filters: {
+    statusFilter(status) {
+      const statusMap = ['primary', 'success', 'danger']
+      return statusMap[status]
+    },
+    statusStringFilter(status) {
+      const statusStringMap = ['未发布', '已发布', '已结束'] 
+      return statusStringMap[status]
     }
   }
 }

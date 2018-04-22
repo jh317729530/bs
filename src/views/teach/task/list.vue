@@ -21,29 +21,35 @@ export default {
   },
   data() {
     return {
-      activeTabName: '1',
-      tabs: [{ name: '1', label: '任务列表', key: 'taskList', isList: true }]
+      activeTabName: '0',
+      tabs: [{ name: '0', label: '任务列表', key: 'taskList', isList: true }]
     }
   },
   methods: {
     ievent(data) {
-      console.log('allData:', data)
-
-      data.label = data.title
-      data.name = '2'
-      data.isList = false
-      data.content = `<h1 style="text-align: center;">Welcome to the TinyMCE demo!</h1><p style="text-align: center; font-size: 15px;"><img title="TinyMCE Logo" src="//www.tinymce.com/images/glyph-tinymce@2x.png" alt="TinyMCE Logo" width="110" height="97" /><ul>
-        <li>Our <a href="//www.tinymce.com/docs/">documentation</a> is a great resource for learning how to configure TinyMCE.</li><li>Have a specific question? Visit the <a href="https://community.tinymce.com/forum/">Community Forum</a>.</li><li>We also offer enterprise grade support as part of <a href="https://tinymce.com/pricing">TinyMCE premium subscriptions</a>.</li>
-      </ul>
-      `
-      console.log('allData:', data)
-
-      this.tabs.push(data)
-      this.activeTabName = data.name
+      // console.log('allData:', data)
+      const task = data.task
+      const tab = {
+        name: task.id.toString(),
+        created: task.created,
+        label: task.title,
+        isList: false,
+        content: task.content
+      }
+      let exist = false
+      this.tabs.forEach(existTab => {
+        if(existTab.name === tab.name) {
+          exist = true
+        }
+      })
+      if(!exist){
+        this.tabs.push(tab)
+      }
+      this.activeTabName = tab.name
     },
     removeTab(targetName) {
       const tabs = this.tabs
-      if (targetName === '1') {
+      if (targetName === '0') {
         return
       }
       let activeTabName = this.activeTabName

@@ -76,7 +76,7 @@ export default {
       loading: false,
       fetchSuccess: true,
       submitVisible: false,
-      taskStatisticsVisible: true,
+      taskStatisticsVisible: false,
       taskStatisticsList: [
         {
           teacherName: '王小明',
