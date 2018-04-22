@@ -1,14 +1,14 @@
 <template>
     <div class="app-container calendar-list-container">
         <div class="filter-container">
-            <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="标题" v-model="listQuery.title">
+            <el-input style="width: 200px;" class="filter-item" placeholder="标题" v-model="listQuery.title">
             </el-input>
-            <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.score" placeholder="评分">
+            <!-- <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.score" placeholder="评分">
                 <el-option v-for="item in scoreOptions" :key="item" :label="item" :value="item">
                 </el-option>
-            </el-select>
-            <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">查询</el-button>
-            <el-button class="filter-item" type="success" v-waves icon="el-icon-upload" @click="isUploadVisable = true">上传</el-button>
+            </el-select> -->
+            <el-button class="filter-item" type="primary" icon="el-icon-search">查询</el-button>
+            <el-button class="filter-item" type="success" icon="el-icon-upload" @click="isUploadVisable = true">上传</el-button>
         </div>
 
         <el-table :data="workList" style="width: 100%" border fit highlight-current-row>
@@ -18,10 +18,7 @@
                 </template>
             </el-table-column>
 
-            <el-table-column width="150px" align="center" label="上传时间">
-                <template slot-scope="scope">
-                    <span>{{scope.row.uploadTime}}</span>
-                </template>
+            <el-table-column width="150px" align="center" label="上传时间" :formatter="DateFormatter">{{created}}
             </el-table-column>
 
             <el-table-column min-width="150px" label="标题" align="center">
@@ -32,15 +29,15 @@
 
             <el-table-column width="110px" align="center" label="上传者">
                 <template slot-scope="scope">
-                    <span>{{scope.row.author}}</span>
+                    <span>{{scope.row.teacherName}}</span>
                 </template>
             </el-table-column>
 
-            <el-table-column width="80px" label="评分" align="center">
+            <!-- <el-table-column width="80px" label="评分" align="center">
                 <template slot-scope="scope">
                     <svg-icon v-for="n in +scope.row.score" icon-class="star" class="meta-item__icon" :key="n"></svg-icon>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
 
             <el-table-column align="center" label="下载量" width="95">
                 <template slot-scope="scope">
@@ -51,80 +48,117 @@
 
             <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
                 <template slot-scope="scope">
-                    <el-button size="mini" type="primary" icon="el-icon-download">下载
+                    <el-button size="mini" type="primary" icon="el-icon-download" @click="handleDownload(scope.row)">下载
                     </el-button>
+                    <el-button size="mini" type="danger" icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
         <div class="block" style="margin-top: 20px">
-            <el-pagination @current-change="handleCurrentChange" :current-page.sync="currentPage3" :page-size="100" layout="prev, pager, next, jumper" :total="1">
+            <el-pagination :page-size="pageQuery.pageSize" @current-change="handleCurrentChange" :total="pageQuery.total" :current-page="pageQuery.currentPage" layout="prev, pager, next">
             </el-pagination>
         </div>
 
         <el-dialog :visible.sync="isUploadVisable" title="上传教学成果">
-            <el-input v-model="uploadTitle" placeholder="输入标题"></el-input>
-            <el-upload style="margin-top: 30px" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或
-                    <em>点击上传</em>
-                </div>
-            </el-upload>
+            <el-form :model="form" :rules="rules" ref="uploadform">
+                <el-form-item label="标题" prop="title">
+                    <el-input v-model="form.title" placeholder="输入标题"></el-input>
+                </el-form-item>
+                <el-upload style="margin-top: 30px" show-file-list drag action="/api/common/upload" :on-success="uploadSuccess" :limit=1 multiple>
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或
+                        <em>点击上传</em>
+                    </div>
+                </el-upload>
+            </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="isUploadVisable = false">取 消</el-button>
-                <el-button type="primary" @click="isUploadVisable = false">确 定</el-button>
+                <el-button type="primary" @click="submit('form')">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
+import { add, getResultList, updateResult, deleteResult } from "@/api/teach";
+import { Message } from "element-ui";
+import { parseTime } from '@/utils'
+import { download } from '@/api/common'
+
 export default {
-  name: 'resultList',
+  name: "resultList",
   data() {
     return {
-      workList: [
-        {
-          id: 1,
-          uploadTime: '2018-04-19',
-          title: 'Java面向对象编程',
-          author: '王小明2',
-          score: 3,
-          downloadCount: 50
-        },
-        {
-          id: 2,
-          uploadTime: '2018-04-19',
-          title: '数据结构与算法',
-          author: '王小明2',
-          score: 2,
-          downloadCount: 3
-        },
-        {
-          id: 3,
-          uploadTime: '2018-04-19',
-          title: 'C语言程序设计',
-          author: '王小明',
-          score: 1,
-          downloadCount: 26
-        },
-        {
-          id: 4,
-          uploadTime: '2018-04-19',
-          title: '编译原理',
-          author: '王小明',
-          score: 1,
-          downloadCount: 11
-        }
-      ],
+      workList: [],
       scoreOptions: [1, 2, 3],
       listQuery: {
-        title: '',
+        title: "",
         score: undefined
       },
       isUploadVisable: false,
-      uploadTitle: ''
+      uploadTitle: "",
+      uploadFile: "",
+      form: {
+        title: "",
+        fileUrl: ""
+      },
+      rules: {
+        title: [{ required: true, message: "请输入标题名称", trigger: "blur" }]
+      },
+      pageQuery: {
+        currentPage: 1,
+        pageSize: 10,
+        total: 0
+      }
+    };
+  },
+  methods: {
+    uploadSuccess(response, file, fileList) {
+      this.form.fileUrl = response.info;
+    },
+    submit() {
+      this.$refs["uploadform"].validate(valid => {
+        console.log(valid);
+        if (valid) {
+          add(this.form.title, this.form.fileUrl).then(() => {
+            Message.success("提交成功");
+            this.isUploadVisable = false;
+            this.fetchData()
+          });
+        }
+      });
+    },
+    fetchData(title, pageNum, pageSize) {
+      getResultList(title, pageNum, pageSize).then(res => {
+        console.log(res)
+        const data = res.info
+        this.pageQuery.currentPage = data.pageNum
+        this.pageQuery.pageSize = data.pageSize
+        this.pageQuery.total = data.total
+        this.workList = data.result
+      });
+    },
+    DateFormatter(row, column, cellValue, index) {
+     return row.created.substring(0,10)
+    },
+    handleCurrentChange(val) {
+      this.pageQuery.currentPage = val
+      this.fetchData('',this.pageQuery.currentPage)
+    },
+    handleDownload(row) {
+    //   download(row.fileUrl)
+      window.open('http://localhost:8080/common/download?fileName='+row.fileUrl);
+      updateResult(row.id)
+      this.fetchData();
+    },
+    handleDelete(row) {
+      deleteResult(row.id)
+      this.fetchData()
     }
+  },
+  created() {
+    this.fetchData();
   }
-}
+};
 </script>
