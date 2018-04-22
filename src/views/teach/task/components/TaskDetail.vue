@@ -4,10 +4,11 @@
     <div class='sub-navbar subtitle'>
       <sticky>
         <template v-if='fetchSuccess'>
-          <el-button style='margin-left: 10px;' @click='taskStatisticsVisible = true'>查看任务完成情况</el-button>
+          <el-button style='margin-left: 10px;' @click='fetchStatistics'>查看任务完成情况</el-button>
           <el-button v-loading='loading' style='margin-left: 10px;' type='warning'>下载附件
           </el-button>
           <el-button v-loading='loading' type='success'>完成</el-button>
+          <el-button v-loading='loading' type='danger'>结束任务</el-button>
         </template>
       </sticky>
     </div>
@@ -59,6 +60,7 @@
 
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
+import { getStatistics } from '@/api/task'
 
 export default {
   name: 'taskDetail',
@@ -66,6 +68,9 @@ export default {
     content: {
       type: String,
       default: ''
+    },
+    taskId: {
+      type: Number
     }
   },
   components: {
@@ -77,17 +82,16 @@ export default {
       fetchSuccess: true,
       submitVisible: false,
       taskStatisticsVisible: false,
-      taskStatisticsList: [
-        {
-          teacherName: '王小明',
-          isFinish: 0
-        },
-        {
-          teacherName: '王小明2',
-          isFinish: 1,
-          finishTime: '2018-04-19 14:20'
-        }
-      ]
+      taskStatisticsList: []
+    }
+  },
+  methods: {
+    fetchStatistics() {
+      getStatistics(this.taskId).then(res => {
+        const data = res.info
+        this.taskStatisticsList = data
+      })
+      this.taskStatisticsVisible = true
     }
   }
 }

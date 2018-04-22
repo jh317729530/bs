@@ -5,7 +5,6 @@
         <template v-if="fetchSuccess">
           <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitTask">发布
           </el-button>
-          <el-button v-loading="loading" type="info">取消</el-button>
         </template>
       </sticky>
 

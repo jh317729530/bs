@@ -35,3 +35,12 @@ export function getDetail(id) {
     data
   })
 }
+
+export function getStatistics(id) {
+  const data = { taskId: id }
+  return request({
+    url: baseUrl + '/task/statistics',
+    method: 'post',
+    data
+  })
+}
