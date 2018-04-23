@@ -88,9 +88,13 @@ export default {
       if (this.isNotInList2(ele)) {
         this.list2.unshift(ele)
       }
+      console.log(1111)
+      this.$emit('pushToRight',ele.id)
     },
     pushEle(ele) {
+      console.log(222)
       this.list1.push(ele)
+      this.$emit('pushToLeft', ele.id)
     }
   }
 }

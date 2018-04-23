@@ -8,3 +8,14 @@ export function getKeywords() {
     method: 'get'
   })
 }
+
+export function setKeywords(selectedIds, noSelectedIds) {
+  return request({
+    url: baseURL + '/research/setKeywords',
+    method: 'post',
+    data: {
+      selectedKeywordIds: selectedIds,
+      noSelectedKeywordIds: noSelectedIds
+    }
+  })
+}
