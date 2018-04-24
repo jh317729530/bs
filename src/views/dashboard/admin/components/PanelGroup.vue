@@ -7,7 +7,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">在线人数</div>
-          <count-to class="card-panel-num" :startVal="0" :endVal="5" :duration="2600"></count-to>
+          <count-to class="card-panel-num" :startVal="0" :endVal="2" :duration="2600"></count-to>
         </div>
       </div>
     </el-col>

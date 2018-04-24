@@ -44,3 +44,13 @@ export function getStatistics(id) {
     data
   })
 }
+
+export function endTask(id) {
+  return request({
+    url: baseUrl + '/task/endTask',
+    method: 'get',
+    data: {
+      taskId: id
+    }
+  })
+}

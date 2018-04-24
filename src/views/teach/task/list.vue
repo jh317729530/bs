@@ -3,7 +3,7 @@
         <el-tabs style='margin-top:15px;' v-model="activeTabName" type="border-card" @tab-remove="removeTab">
             <el-tab-pane v-for="(item) in tabs" :key="item.id" :name="item.name" :label="item.label" :closable="!item.isList">
                 <list-tab-Plane v-if="item.isList" @ievent="ievent"></list-tab-Plane>
-                <task-detail v-else :content="item.content" :taskId="parseInt(item.name)"></task-detail>
+                <task-detail v-else :content="item.content" :taskId="parseInt(item.name)" :status="item.status"></task-detail>
             </el-tab-pane>
         </el-tabs>
 
@@ -34,7 +34,8 @@ export default {
         created: task.created,
         label: task.title,
         isList: false,
-        content: task.content
+        content: task.content,
+        status: task.status
       }
       let exist = false
       this.tabs.forEach(existTab => {

@@ -128,20 +128,21 @@
 
 </template>
 <script>
+import { getDetailInfo } from '@/api/teacher'
 export default {
   name: 'userInfo',
   data() {
     return {
       userInfo: {
-        name: '王祖贤',
-        age: 18,
-        sex: 2,
-        no: '123455',
-        birthday: '2000-07-03',
+        name: '',
+        age: null,
+        sex: null,
+        no: '',
+        birthday: '',
         description:
-          '按时付款就奥胖傅家坡地方恐怕速度快佛牌上岛咖啡破快速跌破飞机送PDF就跑到附近pods附件破损的积分跑附件是破解收到',
+          '',
         imgUrl:
-          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523041156&di=c91d384019df1e04dac42300a31e94df&imgtype=jpg&er=1&src=http%3A%2F%2Fs7.rr.itc.cn%2Fg%2FwapChange1%2F20158_8_12%2Fa03po78235513601405.jpg'
+          ''
       },
       changeUserInfoDialogVisable: false,
       sexOption: [{ value: 1, label: '男' }, { value: 2, label: '女' }],
@@ -155,6 +156,20 @@ export default {
     handleUpdatePassword() {
       this.changeUserPassword = true
     }
+  },
+  created () {
+    getDetailInfo().then(res => {
+      console.log(res)
+      const user = res.info.user
+      const teacher = res.info.teacher
+      this.userInfo.name = teacher.name
+      this.userInfo.age = teacher.age
+      this.userInfo.sex = teacher.sex
+      this.userInfo.no = teacher.workNumber
+      this.userInfo.birthday = '1996-07-03'
+      this.userInfo.description = '本人性格热情开朗，待人友好，为人诚实谦虚。工作勤奋，认真负责，能吃苦耐劳，尽职尽责，有耐心。具有亲和力，平易近人，善于与人沟通。'
+      this.userInfo.imgUrl = user.avatar
+    })
   }
 }
 </script>

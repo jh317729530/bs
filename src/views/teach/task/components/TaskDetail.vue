@@ -8,7 +8,7 @@
           <el-button v-loading='loading' style='margin-left: 10px;' type='warning'>下载附件
           </el-button>
           <el-button v-loading='loading' type='success' v-if="this.roleId ===3">完成</el-button>
-          <el-button v-loading='loading' type='danger' v-if="this.roleId === 2">结束任务</el-button>
+          <el-button v-loading='loading' type='danger' v-if="this.roleId === 2" :disabled="status === 2">结束任务</el-button>
         </template>
       </sticky>
     </div>
@@ -60,8 +60,9 @@
 
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { getStatistics } from '@/api/task'
+import { getStatistics, endTask } from '@/api/task'
 import store from '../../../../store'
+import { Message } from 'element-ui'
 
 export default {
   name: 'taskDetail',
@@ -71,6 +72,9 @@ export default {
       default: ''
     },
     taskId: {
+      type: Number
+    },
+    status: {
       type: Number
     }
   },
@@ -94,6 +98,11 @@ export default {
         this.taskStatisticsList = data
       })
       this.taskStatisticsVisible = true
+    },
+    handleEndTask() {
+      endTask(this.taskId).then(res => {
+
+      })
     }
   },
   created () {

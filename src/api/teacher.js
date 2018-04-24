@@ -37,3 +37,10 @@ export function getTeacherPermis(id) {
     data
   })
 }
+
+export function getDetailInfo() {
+  return request({
+    url: baseUrl + '/user/detailInfo',
+    method: 'get'
+  })
+}

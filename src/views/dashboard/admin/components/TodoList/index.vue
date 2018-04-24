@@ -33,6 +33,7 @@
 
 <script>
 import Todo from './Todo.vue'
+import { getList } from '@/api/task'
 
 const STORAGE_KEY = 'todos'
 const filters = {
@@ -40,16 +41,7 @@ const filters = {
   active: todos => todos.filter(todo => !todo.done),
   completed: todos => todos.filter(todo => todo.done)
 }
-const defalutList = [
-  { text: 'star this repository', done: false },
-  { text: 'fork this repository', done: false },
-  { text: 'follow author', done: false },
-  { text: 'vue-element-admin', done: true },
-  { text: 'vue', done: true },
-  { text: 'element-ui', done: true },
-  { text: 'axios', done: true },
-  { text: 'webpack', done: true }
-]
+const defalutList = []
 export default {
   components: { Todo },
   data() {
@@ -112,6 +104,20 @@ export default {
   filters: {
     pluralize: (n, w) => n === 1 ? w : w + 's',
     capitalize: s => s.charAt(0).toUpperCase() + s.slice(1)
+  },
+  created () {
+    console.log('aaa')
+    defalutList.splice(0,defalutList.length)
+    getList().then(res => {
+      const data = res.info
+      data.forEach(task => {
+        const taskObj = {
+          text: task.title,
+          done: task.finishedStatus === 1 ? true : false
+        }
+        defalutList.push(taskObj)
+      })
+    })
   }
 }
 </script>
