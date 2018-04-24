@@ -130,6 +130,7 @@ export const asyncRouterMap = [
       {
         path: 'result',
         name: '科研成果',
+        component: () => import('@/views/research/result'),
         meta: { title: '科研成果', needPermis: ['/research/result'] }
       },
       {

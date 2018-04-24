@@ -4,10 +4,10 @@
         <el-button style='margin-bottom:20px;' type="primary" icon="document" @click="search">查询</el-button>
         <div class="waterfall">
             <el-card class="box-card item" @click="open" v-for="item1 in articleList" :key="item1.title">
-                <div slot="header" class="clearfix">
+                <div slot="header" class="clearfix" @click="open(item1.url)">
                     <span>{{item1.title}}</span>
                 </div>
-                <div class="text item">
+                <div class="text item" @click="open(item1.url)">
                     {{item1.shortContent}}
                 </div>
             </el-card>
@@ -26,8 +26,8 @@ export default {
     };
   },
   methods: {
-    open() {
-      window.open('http://www.baidu.com')
+    open(url) {
+      window.open(url)
     },
     fetchData(title) {
       getResearch(title).then(res => {
