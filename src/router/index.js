@@ -61,6 +61,20 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/teach',
+    name: '编辑记录',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'record/edit',
+        name: '编辑记录',
+        meta: { title: '编辑记录' },
+        component: () => import('@/views/teach/record/edit')
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
@@ -91,12 +105,6 @@ export const asyncRouterMap = [
     component: Layout,
     meta: { title: '教学管理', icon: 'example', needPermis: ['/teach'] },
     children: [
-      // {
-      //   path: 'search',
-      //   name: '教学查询',
-      //   component: () => import('@/views/dashboard/index'),
-      //   meta: { title: '教学查询' }
-      // },
       {
         path: '/task',
         name: '教学任务',
@@ -112,6 +120,12 @@ export const asyncRouterMap = [
         name: '教学成果',
         meta: { title: '教学成果', needPermis: ['/teach/result'] },
         component: () => import('@/views/teach/result/list')
+      },
+      {
+        path: 'record',
+        name: '教学记录',
+        component: () => import('@/views/teach/record/list'),
+        meta: { title: '教学记录', needPermis: ['/teach/record'] }
       }
     ]
   },
