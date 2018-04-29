@@ -75,6 +75,20 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/teach',
+    name: '记录详情',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'record/detail',
+        name: '记录详情',
+        meta: { title: '记录详情' },
+        component: () => import('@/views/teach/record/detail')
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

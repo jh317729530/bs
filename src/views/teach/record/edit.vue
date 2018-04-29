@@ -11,11 +11,11 @@
                     </el-date-picker>
                 </el-form-item>
 
-                <el-form-item label="授课人">
+                <el-form-item label="授课人" v-if="editType === 1">
                     <el-input v-model="learnForm.teacherName"></el-input>
                 </el-form-item>
 
-                <el-form-item label="授课时间">
+                <el-form-item label="授课时间" v-if="editType === 1">
                     <el-date-picker v-model="learnForm.teachTime" type="datetime" placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>
@@ -35,7 +35,7 @@
 
             <el-form-item>
                 <el-upload style="margin-top: 20px" class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :before-remove="beforeRemove" multiple :limit="3" :on-exceed="handleExceed" :file-list="fileList">
-                    <el-button size="small" type="primary">点击上传</el-button>
+                    <el-button size="small" type="primary">点击上传文件</el-button>
                 </el-upload>
             </el-form-item>
 
@@ -62,8 +62,12 @@ export default {
     return {
       learnForm: {
         created: ""
-      }
+      },
+      editType: 1
     };
+  },
+  created () {
+    this.editType = this.$route.query.editType
   }
 };
 </script>
