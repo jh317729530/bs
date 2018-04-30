@@ -89,6 +89,19 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/workStatistics',
+    name: 'workStatistics',
+    component: Layout,
+    children: [
+      {
+        path: 'statistics',
+        name: 'statistics',
+        meta: { title: '工作量统计', icon: 'chart' },
+        component: () => import('@/views/workStatistics/index')
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 
